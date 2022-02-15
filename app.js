@@ -1,3 +1,6 @@
+// Class select:
+// Proceed with button logic based on class instead of checking for specific id
+
 let num1;
 let num2;
 let operator;
@@ -7,23 +10,23 @@ let display = document.getElementById("display");
 document.body.onclick = function (event) {
 	let target = event.target;
 
-	if ((!isNaN(target.id) && (target.id != "operate"))) {
+  if (target.classList.contains("num")) {
     if (num1 == undefined) {
       tempString += target.id;
-      display.innerHTML += tempString;
+      display.innerHTML = tempString;
       console.log(tempString);
     } else {
       tempString += target.id;
-      display.innerHTML += tempString;
+      display.innerHTML = tempString;
       console.log(tempString);
     }
-  } else if ((isNaN(target.id) && (target.id != "operate"))) {
+  } else if ( (!target.classList.contains("num") && (target.id != "operate")) ) {
     num1 = Number(tempString);
     tempString = "";
     operator = target.innerHTML;
     display.innerHTML += operator;
   }
-  else {
+  else if ( target.id == "operate" ) {
     num2 = Number(tempString);
     console.log(operate( operator, num1, num2 ));
 
@@ -31,6 +34,9 @@ document.body.onclick = function (event) {
     tempString = "";
     num1 = "";
     num2 = "";
+  }
+  else if ( target.id == "clear" ) {
+    Calculator().clear();
   }
 };
 
@@ -52,7 +58,11 @@ function Calculator( num1, num2 ) {
     return ( num1 / num2 );
   };
 
-  return { add, subtract, multiply, divide };
+  const clear = function () {
+
+  }
+
+  return { add, subtract, multiply, divide, clear };
 }
 
 function operate( operator, num1, num2 ) {
