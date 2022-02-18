@@ -1,74 +1,67 @@
-// Class select:
-// Proceed with button logic based on class instead of checking for specific id
-
 let num1;
 let num2;
 let operator;
+let result;
 let tempString = "";
+let displayString = "";
 let display = document.getElementById("display");
 
 document.body.onclick = function (event) {
-	let target = event.target;
-
-  if (target.classList.contains("num")) {
+  let target = event.target;
+	if (target.classList.contains("num")) {
     if (num1 == undefined) {
       tempString += target.id;
       display.innerHTML = tempString;
-      console.log(tempString);
     } else {
       tempString += target.id;
-      display.innerHTML = tempString;
-      console.log(tempString);
+      display.innerHTML = displayString + tempString;
     }
-  } else if ( (!target.classList.contains("num") && (target.id != "operate")) ) {
-    num1 = Number(tempString);
-    tempString = "";
-    operator = target.innerHTML;
-    display.innerHTML += operator;
-  }
-  else if ( target.id == "operate" ) {
-    num2 = Number(tempString);
-    console.log(operate( operator, num1, num2 ));
+  } else {
+    if (isNaN(num1) && isNaN(num2) && (tempString.length > 0)) {
+      num1 = Number(tempString);
+      tempString = "";
 
-    // Reset variables
-    tempString = "";
-    num1 = "";
-    num2 = "";
+    } else if ((!isNaN(num1)) && (isNaN(num2)) && (tempString.length > 0)) {
+			num2 = Number(tempString);
+			tempString = "";
+		}
   }
-  else if ( target.id == "clear" ) {
-    Calculator().clear();
-  }
+  
+  if (target.classList.contains("operator")) {
+    if (!isNaN(num1) && !isNaN(num2)) {
+      let n = operate(operator, num1, num2);
+      num1 = n;
+      num2 = undefined;
+    }
+    operator = target.innerHTML; // Using target.innerHTML allows the operator to be passed as a symbol (+-*/)
+    display.innerHTML = num1 + " " + operator + " ";
+    displayString = display.innerHTML;
+	} else if (target.id == "operate") {
+    result = operate(operator, num1, num2);
+    num1 = result;
+    num2 = undefined;
+    operator = undefined;
+    display.innerHTML = result;
+	} else if (target.id == "clear") {
+      operator = "";
+      result = "";
+      displayString = "";
+      num1 = undefined;
+      num2 = undefined;
+      tempString = "";
+      display.innerHTML = "";
+	}
 };
 
-function Calculator( num1, num2 ) {
-
-function Calculator(num1, num2) {
+function Calculator() {
 	const add      = (num1, num2) => { return num1 + num2; };
 	const subtract = (num1, num2) => { return num1 - num2; };
 	const multiply = (num1, num2) => { return num1 * num2; };
 	const divide   = (num1, num2) => { return num1 / num2; };
-	const clear = () => {
-		tempString = "";
-		num1 = "";
-		num2 = "";
-	};
-
-  const multiply = function ( num1, num2 ) {
-    return ( num1 * num2 );
-  };
-
-  const divide = function ( num1, num2 ) {
-    return ( num1 / num2 );
-  };
-
-  const clear = function () {
-
-  }
-
-  return { add, subtract, multiply, divide, clear };
+	return { add, subtract, multiply, divide };
 }
 
-function operate( operator, num1, num2 ) {
+function operate(operator, num1, num2) {
   switch (operator) {
     case "+":
       return Calculator().add(num1,num2);
@@ -83,37 +76,9 @@ function operate( operator, num1, num2 ) {
   }
 }
 
-function ui () {
-  if (!num1) {
-    return num1 = this.value;
-  } else {
-    return num2 = this.value;
-  }
+function check() {
+  console.log(`num1: ${num1}`);
+  console.log(`num2: ${num2}`);
+  console.log(`operator: ${operator}`);
+  console.log(`tempString: ${tempString}`);
 }
-
-// Test Calculator() function:
-// console.log(Calculator().add(5, 10)); // 15
-// console.log(Calculator().subtract(5, 10)); // -5
-// console.log(Calculator().multiply(5, 10)); // 50
-// console.log(Calculator().divide(5,10)); // 0.5
-
-// Test operate() function:
-// console.log(operate("+", num1,num2)); // 15
-// console.log(operate("-", num1,num2)); // -5
-// console.log(operate("x", num1,num2)); // 50
-// console.log(operate("*", num1,num2)); // 50
-// console.log(operate("/", num1,num2)); // 0.5
-
-// num1 = 5;
-// num2 = 10;
-
-// operator = "+";
-// console.log(operate(operator,num1,num2)); // 15
-// operator = "-";
-// console.log(operate(operator,num1,num2)); // -5
-// operator = "x";
-// console.log(operate(operator,num1,num2)); // 50
-// operator = "*";
-// console.log(operate(operator,num1,num2)); // 50
-// operator = "/";
-// console.log(operate(operator,num1,num2)); // 0.5
