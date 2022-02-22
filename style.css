@@ -25,6 +25,7 @@ body {
   border-radius: 5px;
   /* margin: 5px; */
   margin: 0.3vw;
+  text-align: center;
 }
 
 .operator {

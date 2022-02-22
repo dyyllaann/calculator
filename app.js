@@ -8,50 +8,60 @@ let display = document.getElementById("display");
 
 document.body.onclick = function (event) {
   let target = event.target;
-	if (target.classList.contains("num")) {
-    if (num1 == undefined) {
-      tempString += target.id;
-      display.innerHTML = tempString;
-    } else {
-      tempString += target.id;
-      display.innerHTML = displayString + tempString;
-    }
+  if (target.id == "backspace") {
+    tempString = tempString.substring(0, tempString.length - 1);
+    display.innerHTML = displayString + tempString;
+  } else if (target.classList.contains("num")) {
+    tempString += target.id;
+    display.innerHTML = displayString + tempString;
   } else {
     if (isNaN(num1) && isNaN(num2) && (tempString.length > 0)) {
       num1 = Number(tempString);
-      tempString = "";
-
     } else if ((!isNaN(num1)) && (isNaN(num2)) && (tempString.length > 0)) {
 			num2 = Number(tempString);
-			tempString = "";
 		}
+    tempString = "";
   }
   
   if (target.classList.contains("operator")) {
+    if (operator == "/" && num2 == 0) {
+      clear();
+      display.innerHTML = "nice try.";
+    }  
+    
     if (!isNaN(num1) && !isNaN(num2)) {
       let n = operate(operator, num1, num2);
       num1 = n;
       num2 = undefined;
     }
-    operator = target.innerHTML; // Using target.innerHTML allows the operator to be passed as a symbol (+-*/)
-    display.innerHTML = num1 + " " + operator + " ";
-    displayString = display.innerHTML;
+
+    if (num1) {
+      operator = target.innerHTML;
+      display.innerHTML = num1 + " " + operator + " ";
+      displayString = display.innerHTML;
+    }
 	} else if (target.id == "operate") {
-    result = operate(operator, num1, num2);
-    num1 = result;
-    num2 = undefined;
-    operator = undefined;
-    display.innerHTML = result;
-	} else if (target.id == "clear") {
-      operator = "";
-      result = "";
-      displayString = "";
-      num1 = undefined;
+    if (operator && num1 && num2) {
+      num1 = operate(operator, num1, num2);
       num2 = undefined;
-      tempString = "";
-      display.innerHTML = "";
+      operator = undefined;
+      displayString = num1;
+      display.innerHTML = displayString;
+    }
+	} else if (target.id == "clear") {
+    clear();
 	}
 };
+
+const clear = function () {
+      operator = "";
+			result = "";
+			displayString = "";
+			num1 = undefined;
+			num2 = undefined;
+			tempString = "";
+			display.innerHTML = "";
+}
 
 function Calculator() {
 	const add      = (num1, num2) => { return num1 + num2; };
@@ -81,4 +91,5 @@ function check() {
   console.log(`num2: ${num2}`);
   console.log(`operator: ${operator}`);
   console.log(`tempString: ${tempString}`);
+  console.log(`displayString: ${displayString}`);
 }
