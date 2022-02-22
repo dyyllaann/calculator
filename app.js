@@ -122,26 +122,16 @@ const calculatorUI = function (event) {
 	}
 };
 
-function Calculator() {
-	const add      = (num1, num2) => { return num1 + num2; };
-	const subtract = (num1, num2) => { return num1 - num2; };
-	const multiply = (num1, num2) => { return num1 * num2; };
-	const divide   = (num1, num2) => { return num1 / num2; };
-	return { add, subtract, multiply, divide };
-}
-
 function operate(operator, num1, num2) {
 	switch (operator) {
 		case "+":
-			return Calculator().add(num1, num2);
+			return num1 + num2;
 		case "-":
-			return Calculator().subtract(num1, num2);
+			return num1 - num2;
 		case "x":
-			return Calculator().multiply(num1, num2);
-		case "*":
-			return Calculator().multiply(num1, num2);
+			return num1 * num2;
 		case "/":
-			return Calculator().divide(num1, num2);
+			return num1 / num2;
 	}
 }
 
