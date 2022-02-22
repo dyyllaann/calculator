@@ -89,6 +89,11 @@ const calculatorUI = function (event) {
   // Set operator
   if (target.classList.contains("operator")) {    
     zeroCheck();
+    
+    // If num1 doesn't exist but a value is displayed, set num1 to the display value.
+    if (isNaN(num1) && display.innerHTML.length>0) {
+      num1 = Number(display.innerHTML);
+    }
 
     // If both operands exist, operate
     if (!isNaN(num1) && !isNaN(num2)) {
@@ -103,17 +108,19 @@ const calculatorUI = function (event) {
       displayString = num1 + " " + operator + " ";
       display.innerHTML = displayString;
     }
+
 	} 
   
   if (target.id == "operate") {
     zeroCheck();
 
     if (operator && num1 && num2) {
-      num1 = operate(operator, num1, num2);
+      display.innerHTML = operate(operator, num1, num2);
+      num1 = undefined;
       num2 = undefined;
       operator = undefined;
-      displayString = num1;
-      display.innerHTML = displayString;
+      displayString = "";
+      // displayString = num1;
     }
 	} 
   
