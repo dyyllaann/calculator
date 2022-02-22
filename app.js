@@ -6,21 +6,63 @@ let tempString = "";
 let displayString = "";
 let display = document.getElementById("display");
 
-document.body.onclick = function (event) {
-  let target = event.target;
-  if (target.id == "backspace") {
+const logit = function(event) {
+  let id = event.key;
+  switch (id) {
+    case "Enter":
+      id = "operate";
+      break;
+    case "+":
+      id = "add";
+      break;
+    case "-":
+      id = "subtract";
+      break;
+    case "*":
+      id = "multiply";
+      break;
+    case "/":
+      id = "divide";
+      break;
+    case "c":
+      id = "clear";
+      break;
+    case ".":
+      id = "decimal";
+      break;
+  }
+  if (document.getElementById(id)) {
+    document.getElementById(id).click();
+  }
+}
+
+document.addEventListener('keyup', logit);
+
+const calculatorUI = function (event) {
+  target = event.target;
+  
+  
+
+  if (target.id == "Backspace") {
     tempString = tempString.substring(0, tempString.length - 1);
     display.innerHTML = displayString + tempString;
+  } else if (target.id == "decimal") {
+    if (!tempString.includes(".")) {
+      tempString += ".";
+      display.innerHTML = displayString + tempString;
+    }
   } else if (target.classList.contains("num")) {
     tempString += target.id;
     display.innerHTML = displayString + tempString;
   } else {
-    if (isNaN(num1) && isNaN(num2) && (tempString.length > 0)) {
-      num1 = Number(tempString);
-    } else if ((!isNaN(num1)) && (isNaN(num2)) && (tempString.length > 0)) {
-			num2 = Number(tempString);
+    if (tempString.length > 0) {
+      if (isNaN(num1) && isNaN(num2)) {
+        num1 = Number(tempString);
+      } else if ((!isNaN(num1)) && (isNaN(num2))) {
+        num2 = Number(tempString);
+      }
+      tempString = "";
 		}
-    tempString = "";
   }
   
   if (target.classList.contains("operator")) {
@@ -29,18 +71,23 @@ document.body.onclick = function (event) {
       display.innerHTML = "nice try.";
     }  
     
+    // If both operands exist, operate
     if (!isNaN(num1) && !isNaN(num2)) {
       let n = operate(operator, num1, num2);
       num1 = n;
       num2 = undefined;
     }
 
+    // If num1 exists, set and display operator. Otherwise, don't. 
     if (num1) {
       operator = target.innerHTML;
-      display.innerHTML = num1 + " " + operator + " ";
-      displayString = display.innerHTML;
+      displayString = num1 + " " + operator + " ";
+      display.innerHTML = displayString;
     }
-	} else if (target.id == "operate") {
+	} 
+
+  
+  if (target.id == "operate") {
     if (operator && num1 && num2) {
       num1 = operate(operator, num1, num2);
       num2 = undefined;
@@ -48,12 +95,9 @@ document.body.onclick = function (event) {
       displayString = num1;
       display.innerHTML = displayString;
     }
-	} else if (target.id == "clear") {
-    clear();
-	}
-};
-
-const clear = function () {
+	} 
+  
+  if (target.id == "clear") {
       operator = "";
 			result = "";
 			displayString = "";
@@ -61,7 +105,8 @@ const clear = function () {
 			num2 = undefined;
 			tempString = "";
 			display.innerHTML = "";
-}
+	}
+};
 
 function Calculator() {
 	const add      = (num1, num2) => { return num1 + num2; };
@@ -85,6 +130,8 @@ function operate(operator, num1, num2) {
       return Calculator().divide(num1,num2);
   }
 }
+
+document.addEventListener('click', calculatorUI);
 
 function check() {
   console.log(`num1: ${num1}`);
